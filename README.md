@@ -45,6 +45,14 @@ You now have a docker image named smartcyp which has everything you need to run 
 Here we specify a smiles string as a commandline argument. For more info on the command-line args see here:
 http://www.farma.ku.dk/smartcyp/download.php
 
+first make a directory for the results
+
+``` sh
+mkdir results
+```
+
+and now run smartcyp
+
 ``` sh
 docker run --rm -v $PWD/results:/results smartcyp java -jar smartcyp.jar -smiles 'CN1C=NC2=C1C(=O)N(C(=O)N2C)C' -outputdir /results -outputfile caffeine
 
@@ -61,13 +69,34 @@ docker run --rm -v $PWD/results:/results smartcyp java -jar smartcyp.jar -smiles
 The temporary file smartcypxyz.smiles has been deleted!
 ```
 
-Results are put in the results dir
+Some explaination:
 
+*docker run* fires up the container from the specified image
+
+*--rm* deletes the container when finished so you have no rubbish hanging around
+
+*-v $PWD/results:/results* mount the results subdirectory inside the container as /results so that when the results are put there you can find them.
+
+*java ...* (the rest) is the command to run smart cyp. Likely you will want to adjust these. 
+ 
+Results will be found in the results dir of your host machine. You can see the output in a browser:
 
 ``` sh
 firefox results/caffeine.html
 ```
-and view the output!
+
+
+## Use prebuilt image
+
+If building the image is too much effort you can use a pre-prepared image from Docker Hub.
+
+``` sh
+docker run --rm -v $PWD/results:/results tdudgeon/smartcyp java -jar smartcyp.jar -smiles 'CN1C=NC2=C1C(=O)N(C(=O)N2C)C' -outputdir /results -outputfile caffeine
+```
+
+This does the same thing as above, but the Docker image is pulled from Docker Hub, so this command is the only thing you need other than docker.
+The docker image on Docker Hub is built automatically from the Docker file on Git Hub, so that whenever the Git Hub project is updated the Docker Hub image is autmatically rebuilt.
+
 
 
 
